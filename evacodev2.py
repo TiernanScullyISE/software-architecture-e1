@@ -11,6 +11,7 @@ with open(script_dir / "eva-data.json", "r", encoding="utf-8") as file:
 
 records = []
 country_totals = {}
+longest_eva = None
 
 for eva in eva_data:
     date_text = eva.get("date")
@@ -24,6 +25,9 @@ for eva in eva_data:
     country = eva.get("country")
     if country:
         country_totals[country] = country_totals.get(country, 0) + duration_hours
+
+    if longest_eva is None or duration_hours > longest_eva[2]:
+        longest_eva = (date_text, country, duration_hours)
 
     if not date_text:
         continue
@@ -45,6 +49,14 @@ if matching_country:
     )
 else:
     print(f"No EVA duration data found for {selected_country}.")
+
+if longest_eva:
+    longest_date, longest_country, longest_duration = longest_eva
+    display_date = longest_date.split("T")[0] if longest_date else "unknown"
+    print(
+        f"Longest EVA: {display_date}, {longest_country}, "
+        f"{longest_duration:.2f} hours"
+    )
 
 records.sort(key=lambda record: record[0])
 
