@@ -1,0 +1,28 @@
+Before editing the code, record your answers to the following:
+
+1. Where you think the new functionality belongs;
+
+In the existing loop that processes each EVA, after the duration has been
+converted into hours. The result can then be displayed with the other
+printed results.
+
+2. Which existing data or processing you can reuse;
+
+I can reuse eva_data, the existing duration conversion, and the country and
+date values already read from each record.
+
+3. Which parts of the current program you expect to change;
+
+I would add a variable to store the longest EVA found so far and add output
+showing its date, country and duration.
+
+4. Which parts you expect to leave untouched;
+
+The JSON loading, country-total calculation, cumulative-hours calculation,
+sorting, plotting and file-saving code should remain unchanged.
+
+5. What existing behaviour might accidentally be affected.
+
+Records with missing durations could cause errors if not skipped. Changing the
+processing loop carelessly could also affect the country total or cumulative
+plot, so the existing duration and date checks need to stay reliable.
