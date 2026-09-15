@@ -26,3 +26,39 @@ sorting, plotting and file-saving code should remain unchanged.
 Records with missing durations could cause errors if not skipped. Changing the
 processing loop carelessly could also affect the country total or cumulative
 plot, so the existing duration and date checks need to stay reliable.
+
+Post-fix review
+
+Inspect the difference between the original software and your version:
+
+1. Did I change more code than I needed to?
+
+No. The changes are limited to country totals, longest-EVA tracking and the
+output for those results. The existing plotting code was left in place.
+
+2. Would another developer understand what I changed?
+
+Yes. The names country_totals and longest_eva describe the new behaviour, and
+the output labels explain the values being displayed.
+
+3. Did I duplicate behaviour that already existed elsewhere?
+
+No. The existing duration conversion is reused for both features. The new code
+only stores the totals and longest result while the records are being read.
+
+4. Are there assumptions in my solution that another developer would need to discover?
+
+The user types a country name when the program starts, and matching is not
+case-sensitive. Country totals include records with a duration even when the
+date is missing, while the cumulative plot still skips records without dates.
+
+5. How confident am I that I have not broken existing behaviour?
+
+I am reasonably confident. I tested USA, Russia and an unknown country. The
+country totals and longest EVA were correct, and the cumulative plot was still
+created.
+
+6. Make any necessary corrections.
+
+No further corrections were needed after testing. The generated PNG was left
+out of the Git commits because it is a program output rather than source code.
