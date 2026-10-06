@@ -12,16 +12,27 @@ with open(script_dir / "eva-data.json", "r", encoding="utf-8") as file:
 records = []
 country_totals = {}
 longest_eva = None
+category_counts = {"short": 0, "standard": 0, "long": 0}
+missing_duration_count = 0
 
 for eva in eva_data:
     date_text = eva.get("date")
     duration_text = eva.get("duration")
     
     if not duration_text:
+        missing_duration_count += 1
         continue
 
     hours, minutes = map(int, duration_text.split(":"))
     duration_hours = hours + minutes/60
+    if duration_hours < 4:
+        category = "short"
+    elif duration_hours < 7:
+        category = "standard"
+    else:
+        category = "long"
+    category_counts[category] += 1
+
     country = eva.get("country")
     if country:
         country_totals[country] = country_totals.get(country, 0) + duration_hours
@@ -57,6 +68,14 @@ if longest_eva:
         f"Longest EVA: {display_date}, {longest_country}, "
         f"{longest_duration:.2f} hours"
     )
+
+classified_count = sum(category_counts.values())
+print(f"EVA duration categories ({classified_count} EVAs with recorded durations):")
+for category, count in category_counts.items():
+    percentage = count / classified_count * 100 if classified_count else 0
+    print(f"{category.capitalize()}: {count} ({percentage:.2f}%)")
+if missing_duration_count:
+    print(f"EVAs without a recorded duration: {missing_duration_count} (excluded).")
 
 records.sort(key=lambda record: record[0])
 
